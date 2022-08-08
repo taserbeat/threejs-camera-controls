@@ -64,8 +64,14 @@ function App() {
 
     const updateRender = () => {
       // カメラ制御
-      camera.position.x = cursorX * 3;
-      camera.position.y = cursorY * 3;
+      // camera.position.x = cursorX * 3;
+      // camera.position.y = cursorY * 3;
+
+      camera.position.x = Math.sin(2 * Math.PI * cursorX) * 3;
+      camera.position.z = Math.cos(2 * Math.PI * cursorX) * 3;
+      camera.position.y = cursorY * 5;
+
+      camera.lookAt(mesh.position);
 
       // レンダリング
       renderer.render(scene, camera);
