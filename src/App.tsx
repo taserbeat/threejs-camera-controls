@@ -44,15 +44,29 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 document.body.appendChild(renderer.domElement);
 
+// カーソル位置
+let [cursorX, cursorY] = [0, 0];
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 function App() {
   const refDiv = useRef<HTMLDivElement>(null);
 
+  const onMouseMove = (event: MouseEvent) => {
+    cursorX = event.clientX / window.innerWidth - 0.5;
+    cursorY = event.clientY / window.innerHeight - 0.5;
+  };
+
   useEffect(() => {
+    window.addEventListener("mousemove", onMouseMove);
+
     refDiv.current?.appendChild(renderer.domElement);
 
     const updateRender = () => {
+      // カメラ制御
+      camera.position.x = cursorX * 3;
+      camera.position.y = cursorY * 3;
+
       // レンダリング
       renderer.render(scene, camera);
       requestAnimationFrame(updateRender);
@@ -62,6 +76,7 @@ function App() {
 
     return () => {
       refDiv.current?.removeChild(renderer.domElement);
+      removeEventListener("mousemove", onMouseMove);
     };
   }, []);
 
